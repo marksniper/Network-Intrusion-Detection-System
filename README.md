@@ -44,7 +44,7 @@ R language is choosen to reach the goal. Furthermore, it is possible to integrat
 
 Homewher, the project uses external resources. They are two dataset: KDD-Cup 1999 and NSL-KDD. They are widely used in academic world.
 
-For futher information, it is possible to read my [master degree thesis](https://drive.google.com/open?id=1VPBtQhsF4hWB7W0ethwvmocEd5vrYyMQ) or contact me through e-mail at \*silsniper@gmail.com\*
+For futher information, it is possible to read my [master degree thesis](https://drive.google.com/open?id=1VPBtQhsF4hWB7W0ethwvmocEd5vrYyMQ) or contact me through e-mail at silsniper@gmail.com.
 
 ### Prerequisites
 
