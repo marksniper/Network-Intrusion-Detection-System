@@ -1,0 +1,264 @@
+---
+title: "dataset reduction"
+author: "MarkSniper94"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r,  echo=FALSE}
+library(corrplot)
+library(randomForest)
+library(caret)
+```
+
+#Correlation analysis. Scaling values. Random Forest: important features
+
+##KDD Dataset
+
+Load KDD dataset.
+```{r}
+kdd <- read.csv("train_KDD_without_dulicated.csv")
+```
+
+Show kdd dimension.
+```{r}
+dim(kdd)
+```
+
+Check NA values.
+```{r}
+NAcol_KDD = 0
+NAcol_KDD <- which(colSums(is.na(kdd)) > 0)
+print(NAcol_KDD)
+```
+
+Count numeric variables.
+```{r}
+numericVars <- which(sapply(kdd, is.numeric)) 
+numericVarNames <- names(numericVars) 
+cat('There are', length(numericVars), 'numeric variables')
+```
+
+Show factor variables.
+```{r}
+Charcol <- names(kdd[,sapply(kdd, is.factor)])
+cat('There are', length(Charcol), 'remaining columns with factor values')
+```
+
+Print correlation plot for kdd dataset.
+```{r}
+kdd_numVar2 <- kdd[,5:41]
+correlation <- cor(kdd_numVar2)
+corrplot(correlation, method="circle", na.label= '.')
+kdd_without_features_correlated <- kdd[,-(24:41)]
+which(sapply(kdd_without_features_correlated, is.factor))
+kdd_without_features_correlated <- transform(kdd_without_features_correlated, result=as.integer(result))
+kdd_without_features_correlated <- transform(kdd_without_features_correlated, flag=as.integer(flag))
+kdd_without_features_correlated <- transform(kdd_without_features_correlated, protocol_type=as.integer(protocol_type))
+kdd_without_features_correlated <- transform(kdd_without_features_correlated,  service=as.integer(service))
+correlation <- cor(kdd_without_features_correlated)
+corrplot(correlation, method="circle", na.label= '.')
+```
+
+Scale data with zero mean and variance one. Don't use the "result" column.
+```{r}
+kdd_without_features_correlated <- kdd[,-(24:41)]
+mean <- apply(kdd_without_features_correlated[,(5:23)], 2, mean)
+std <- apply(kdd_without_features_correlated[,(5:23)], 2, sd)
+kdd_without_features_correlated[,(5:23)] <- scale(kdd_without_features_correlated[,(5:23)], center = mean, scale = std)
+mean <- mean(kdd_without_features_correlated$duration)
+std <- sd(kdd_without_features_correlated$duration)
+kdd_without_features_correlated$duration <- scale(kdd_without_features_correlated$duration, center = mean, scale = std)
+```
+
+Data frame conversion.
+```{r}
+kdd_without_features_correlated <- data.frame(kdd_without_features_correlated)
+```
+
+Find NA values.
+```{r}
+NAcol_KDD = 0
+NAcol_KDD <- which(colSums(is.na(kdd_without_features_correlated)) > 0)
+print(NAcol_KDD)
+```
+
+Data frame conversion.
+```{r}
+kdd_without_features_correlated <- data.frame(kdd_without_features_correlated)
+```
+
+Delete Na features.
+```{r}
+kdd_without_features_correlated <- kdd_without_features_correlated[ ,-(20:21)]
+```
+
+Check NA values after manipulation.
+```{r}
+NAcol_KDD = 0
+NAcol_KDD <- which(colSums(is.na(kdd_without_features_correlated)) > 0)
+print(NAcol_KDD)
+```
+
+Data frame conversion.
+```{r}
+kdd_without_features_correlated <- data.frame(kdd_without_features_correlated)
+```
+
+Remove unseuful attributes KDD.
+```{r}
+attr(kdd_without_features_correlated$duration, "scaled:scale") <- NULL
+attr(kdd_without_features_correlated$duration, "scaled:center") <- NULL
+```
+
+Save the new kdd dataset. It will use to predict an attack.
+```{r}
+write.csv(kdd_without_features_correlated,file = "kdd_for_prediction.csv",row.names = F)
+```
+
+Transform in numeric and scaling kdd features.
+```{r}
+kdd_without_features_correlated <- data.frame(kdd_without_features_correlated)
+kdd_without_features_correlated <- kdd[,-(24:41)]
+which(sapply(kdd_without_features_correlated, is.factor))
+kdd_without_features_correlated <- transform(kdd_without_features_correlated, result=as.integer(result))
+kdd_without_features_correlated <- transform(kdd_without_features_correlated, flag=as.integer(flag))
+kdd_without_features_correlated <- transform(kdd_without_features_correlated, protocol_type=as.integer(protocol_type))
+kdd_without_features_correlated <- transform(kdd_without_features_correlated,  service=as.integer(service))
+mean <- apply(kdd_without_features_correlated, 2, mean)
+std <- apply(kdd_without_features_correlated, 2, sd)
+kdd_without_features_correlated <- scale(kdd_without_features_correlated, center = mean, scale = std)
+```
+
+Quick Random Forest for KDD dataset, in order to understand the "importance features".
+```{r}
+quick_RF <- randomForest(x=kdd_without_features_correlated[1:1500 ,-(22)], y=kdd_without_features_correlated$result[1:1500], ntree=100,importance=TRUE)
+imp_RF <- importance(quick_RF)
+imp_DF <- data.frame(Variables = row.names(imp_RF), MSE = imp_RF[,1])
+imp_DF <- imp_DF[order(imp_DF$MSE, decreasing = TRUE),]
+
+ggplot(imp_DF[1:20,], aes(x=reorder(Variables, MSE), y=MSE, fill=MSE)) + geom_bar(stat = 'identity')+
+  labs(x = "Variables", y= "% increase MSE if variable is randomly permuted") + coord_flip() + 
+  theme(legend.position="none")
+```
+
+#NSL KDD Dataset
+
+Load and show dataset.
+```{r}
+nsl_kdd <- read.csv("train_NSl_KDD.csv")
+dim(nsl_kdd)
+```
+
+Check NA values.
+```{r}
+NAcol_nsl_KDD =0
+NAcol_nsl_KDD <- which(colSums(is.na(nsl_kdd)) > 0)
+print(NAcol_nsl_KDD)
+```
+
+Print correlation plot for NSL dataset.
+```{r}
+nsl_kdd2 <- nsl_kdd[,5:41]
+correlation <- cor(nsl_kdd2)
+corrplot(correlation, method="circle", na.label= '.')
+kddNSL_without_features_correlated <- nsl_kdd[,-(24:41)]
+which(sapply(kddNSL_without_features_correlated, is.factor))
+kddNSL_without_features_correlated <- transform(kddNSL_without_features_correlated, result=as.integer(result))
+kddNSL_without_features_correlated <- transform(kddNSL_without_features_correlated, flag=as.integer(flag))
+kddNSL_without_features_correlated <- transform(kddNSL_without_features_correlated, protocol_type=as.integer(protocol_type))
+kddNSL_without_features_correlated <- transform(kddNSL_without_features_correlated,  service=as.integer(service))
+correlation <- cor(kddNSL_without_features_correlated)
+corrplot(correlation, method="circle", na.label= '.')
+```
+
+Scale value for NSL dataset.
+```{r}
+kddNSL_without_features_correlated <- nsl_kdd[,-(24:41)]
+mean <- apply(kddNSL_without_features_correlated[,(5:23)], 2, mean)
+std <- apply(kddNSL_without_features_correlated[,(5:23)], 2, sd)
+kddNSL_without_features_correlated[,(5:23)] <- scale(kddNSL_without_features_correlated[,(5:23)], center = mean, scale = std)
+mean <- mean(kddNSL_without_features_correlated$duration)
+std <- sd(kddNSL_without_features_correlated$duration)
+kddNSL_without_features_correlated$duration <- scale(kddNSL_without_features_correlated$duration, center = mean, scale = std)
+```
+
+Conversion in data frame.
+```{r}
+kddNSL_without_features_correlated <- data.frame(kddNSL_without_features_correlated)
+```
+
+Show NA values.
+```{r}
+NAcol_nsl_KDD =0
+NAcol_nsl_KDD <- which(colSums(is.na(kddNSL_without_features_correlated)) > 0)
+print(NAcol_nsl_KDD)
+```
+
+Conversion in data frame.
+```{r}
+kddNSL_without_features_correlated <- data.frame(kddNSL_without_features_correlated)
+```
+
+Delete NA values.
+```{r}
+kddNSL_without_features_correlated <- kddNSL_without_features_correlated[ ,-(20)]
+```
+
+##Pay attention. The dataset has one more column than the KDD dataset
+Show NA values after manipulation.
+```{r}
+NAcol_nsl_KDD =0
+NAcol_nsl_KDD <- which(colSums(is.na(kddNSL_without_features_correlated)) > 0)
+print(NAcol_nsl_KDD)
+```
+
+Trasform dataset in data frame.
+```{r}
+kddNSL_without_features_correlated <- data.frame(kddNSL_without_features_correlated)
+```
+
+Remove unseuful attributes NSL dataset.
+```{r}
+attr(kddNSL_without_features_correlated$duration, "scaled:scale") <- NULL
+attr(kddNSL_without_features_correlated$duration, "scaled:center") <- NULL
+```
+
+Save kdd-NSl dataset for prediction.
+```{r}
+write.csv(kddNSL_without_features_correlated,file = "kddNSL_for_prediction.csv",row.names = F)
+```
+
+```{r,  echo=FALSE}
+kddNSL_without_features_correlated <- data.frame(kddNSL_without_features_correlated)
+```
+
+Transform in numeric and scaling NSL dataset.
+```{r}
+kddNSL_without_features_correlated <- nsl_kdd[,-(24:41)]
+which(sapply(kddNSL_without_features_correlated, is.factor))
+kddNSL_without_features_correlated <- transform(kddNSL_without_features_correlated, result=as.integer(result))
+kddNSL_without_features_correlated <- transform(kddNSL_without_features_correlated, flag=as.integer(flag))
+kddNSL_without_features_correlated <- transform(kddNSL_without_features_correlated, protocol_type=as.integer(protocol_type))
+kddNSL_without_features_correlated <- transform(kddNSL_without_features_correlated,  service=as.integer(service))
+mean <- apply(kddNSL_without_features_correlated, 2, mean)
+std <- apply(kddNSL_without_features_correlated, 2, sd)
+kddNSL_without_features_correlated <- scale(kddNSL_without_features_correlated, center = mean, scale = std)
+```
+
+Quick Random Forest for NSL dataset, in order to understand the "importance features".
+```{r}
+quick_RF <- randomForest(x=kddNSL_without_features_correlated[1:1500 ,-(23)], y=kddNSL_without_features_correlated$result[1:1500], ntree=100,importance=TRUE)
+imp_RF <- importance(quick_RF)
+imp_DF <- data.frame(Variables = row.names(imp_RF), MSE = imp_RF[,1])
+imp_DF <- imp_DF[order(imp_DF$MSE, decreasing = TRUE),]
+ggplot(imp_DF[1:20,], aes(x=reorder(Variables, MSE), y=MSE, fill=MSE)) + geom_bar(stat = 'identity')+
+  labs(x = "Variables", y= "% increase MSE if variable is randomly permuted") + coord_flip() + 
+  theme(legend.position="none")
+```
+
+

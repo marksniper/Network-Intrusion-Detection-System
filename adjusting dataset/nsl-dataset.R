@@ -1,0 +1,96 @@
+#load dataset
+train_KDD <- read.table("NLS-KDDTrain.csv",
+                        stringsAsFactors=FALSE, header=TRUE, sep=",")
+#show dataset information
+str(train_KDD)
+#insert colnums name
+colnames(train_KDD) = c("duration", "protocol_type", "service", "flag", "src_bytes", "dst_bytes", 
+                        "land", "wrong_fragment", "urgent", "hot", "num_failed_logins", "logged_in", 
+                        "num_compromised", "root_shell", "su_attempted", "num_root", "num_file_creations", 
+                        "num_shells", "num_access_files", "num_outbound_cmds", "is_hot_login",
+                        "is_guest_login", "count", "srv_count", "serror_rate", "srv_serror_rate", 
+                        "rerror_rate","srv_rerror_rate", "same_srv_rate", "diff_srv_rate",                        
+                        "srv_diff_host_rate", "dst_host_count","dst_host_srv_count","dst_host_same_srv_rate", 
+                        "dst_host_diff_srv_rate", "dst_host_same_src_port_rate", "dst_host_srv_diff_host_rate", 
+                        "dst_host_serror_rate","dst_host_srv_serror_rate", "dst_host_rerror_rate", "dst_host_srv_rerror_rate", 
+                        "result")
+#set primitive data types for each column
+train_KDD$duration = as.numeric(as.character(train_KDD$duration))
+train_KDD$protocol_type = factor(train_KDD$protocol_type)
+train_KDD$service = factor(train_KDD$service)
+train_KDD$flag = factor(train_KDD$flag)
+train_KDD$src_bytes = as.numeric(as.character(train_KDD$src_bytes))
+train_KDD$dst_bytes = as.numeric(as.character(train_KDD$dst_bytes))
+train_KDD$land = factor(train_KDD$land)
+train_KDD$wrong_fragment = as.numeric(as.character(train_KDD$wrong_fragment))
+train_KDD$urgent = as.numeric(as.character(train_KDD$urgent))
+train_KDD$hot = as.numeric(as.character(train_KDD$hot))
+train_KDD$num_failed_logins = as.numeric(as.character(train_KDD$num_failed_logins))
+train_KDD$logged_in = factor(train_KDD$logged_in)
+train_KDD$num_compromised = as.numeric(as.character(train_KDD$num_compromised))
+train_KDD$root_shell = factor(train_KDD$root_shell)
+train_KDD$su_attempted = factor(train_KDD$su_attempted)
+train_KDD$num_root = as.numeric(as.character(train_KDD$num_root))
+train_KDD$num_file_creations = as.numeric(as.character(train_KDD$num_file_creations))
+train_KDD$num_shells = as.numeric(as.character(train_KDD$num_shells))
+train_KDD$num_access_files = as.numeric(as.character(train_KDD$num_access_files))
+train_KDD$is_guest_login = factor(train_KDD$is_guest_login)
+train_KDD$count = as.numeric(as.character(train_KDD$count))
+train_KDD$srv_count = as.numeric(as.character(train_KDD$srv_count))
+train_KDD$serror_rate = as.numeric(as.character(train_KDD$serror_rate))
+train_KDD$srv_serror_rate = as.numeric(as.character(train_KDD$srv_serror_rate))
+train_KDD$rerror_rate = as.numeric(as.character(train_KDD$rerror_rate))
+train_KDD$srv_rerror_rate = as.numeric(as.character(train_KDD$srv_rerror_rate))
+train_KDD$same_srv_rate = as.numeric(as.character(train_KDD$same_srv_rate))
+train_KDD$diff_srv_rate = as.numeric(as.character(train_KDD$diff_srv_rate))
+train_KDD$srv_diff_host_rate = as.numeric(as.character(train_KDD$srv_diff_host_rate))
+train_KDD$dst_host_count = as.numeric(as.character(train_KDD$dst_host_count))
+train_KDD$dst_host_srv_count = as.numeric(as.character(train_KDD$dst_host_srv_count))
+train_KDD$dst_host_same_srv_rate = as.numeric(as.character(train_KDD$dst_host_same_srv_rate))
+train_KDD$dst_host_diff_srv_rate = as.numeric(as.character(train_KDD$dst_host_diff_srv_rate))
+train_KDD$dst_host_same_src_port_rate = as.numeric(as.character(train_KDD$dst_host_same_src_port_rate))
+train_KDD$dst_host_srv_diff_host_rate = as.numeric(as.character(train_KDD$dst_host_srv_diff_host_rate))
+train_KDD$dst_host_serror_rate = as.numeric(as.character(train_KDD$dst_host_serror_rate))
+train_KDD$dst_host_srv_serror_rate = as.numeric(as.character(train_KDD$dst_host_srv_serror_rate))
+train_KDD$dst_host_rerror_rate = as.numeric(as.character(train_KDD$dst_host_rerror_rate))
+train_KDD$dst_host_srv_rerror_rate = as.numeric(as.character(train_KDD$dst_host_srv_rerror_rate))
+train_KDD$result = as.character(train_KDD$result)
+#classify the attacks by type and not by name using http://kdd.ics.uci.edu/databases/kddcup99/training_attack_types 
+train_KDD$result[train_KDD$result == "ipsweep"] = "probe"
+train_KDD$result[train_KDD$result == "portsweep"] = "probe"
+train_KDD$result[train_KDD$result == "nmap"] = "probe"
+train_KDD$result[train_KDD$result == "satan"] = "probe"
+train_KDD$result[train_KDD$result == "buffer_overflow"] = "u2r"
+train_KDD$result[train_KDD$result == "loadmodule"] = "u2r"
+train_KDD$result[train_KDD$result == "perl"] = "u2r"
+train_KDD$result[train_KDD$result == "rootkit"] = "u2r"
+train_KDD$result[train_KDD$result == "back"] = "dos"
+train_KDD$result[train_KDD$result == "land"] = "dos"
+train_KDD$result[train_KDD$result == "neptune"] = "dos"
+train_KDD$result[train_KDD$result == "pod"] = "dos"
+train_KDD$result[train_KDD$result == "smurf"] = "dos"
+train_KDD$result[train_KDD$result == "teardrop"] = "dos"
+train_KDD$result[train_KDD$result == "ftp_write"] = "r2l"
+train_KDD$result[train_KDD$result == "guess_passwd"] = "r2l"
+train_KDD$result[train_KDD$result == "imap"] = "r2l"
+train_KDD$result[train_KDD$result == "multihop"] = "r2l"
+train_KDD$result[train_KDD$result == "phf"] = "r2l"
+train_KDD$result[train_KDD$result == "spy"] = "r2l"
+train_KDD$result[train_KDD$result == "warezclient"] = "r2l"
+train_KDD$result[train_KDD$result == "warezmaster"] = "r2l"
+train_KDD$result[train_KDD$result == "normal"] = "normal"
+#set result feature like factor for after use
+train_KDD$result = as.factor(train_KDD$result)
+#show dataframe after manipulation
+str(train_KDD)
+#Column 43 contains index references for backward compatibility with the kdd data set
+train_KDD <- train_KDD[ ,-43]
+#show dataset
+str(train_KDD)
+#count dupplicate records in train_KDD
+number_duplicate <- sum(duplicated(train_KDD))
+print(paste0("The number of duplicate records are: ",number_duplicate))
+#calculate percentage of duplicate records
+print(paste0("The percentage of duplicate records is: ", round((number_duplicate*100/(nrow(train_KDD))),3)))
+#save train_NLS_KDD in csv file
+write.csv(train_KDD,file = "train_NLS_KDD.csv",row.names = F)
