@@ -12,6 +12,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Load and show dataset. 
 ```{r}
+train_KDD <- read.table("NLS-KDDTrain.csv",
+                        stringsAsFactors=FALSE, header=TRUE, sep=",")
 str(train_KDD)
 ```
 
