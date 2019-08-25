@@ -32,7 +32,7 @@ I advide you to try a change a models in order to exploit a model beneficts. Thu
 
 The code is written in R and uses a [KDD-Cup 1999 dataset](http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html) and [NSL-KDD dataset](https://github.com/defcom17/NSL_KDD) .
 
-For more information, it is possible to read my [master degree thesis](https://drive.google.com/open?id=1VPBtQhsF4hWB7W0ethwvmocEd5vrYyMQ) or contact me through e-mail at silsniper@gmail.com.
+For more information, it is possible to read my [master degree thesis] or contact me through e-mail at silsniper@gmail.com.
   
 ## Getting Started
 
@@ -44,7 +44,7 @@ R language is choosen to reach the goal. Furthermore, it is possible to integrat
 
 Homewher, the project uses external resources. They are two dataset: KDD-Cup 1999 and NSL-KDD. They are widely used in academic world.
 
-For futher information, it is possible to read my [master degree thesis](https://drive.google.com/open?id=1VPBtQhsF4hWB7W0ethwvmocEd5vrYyMQ) or contact me through e-mail at silsniper@gmail.com.
+For futher information, it is possible to read my [master degree thesis] or contact me through e-mail at silsniper@gmail.com.
 
 ### Prerequisites
 
