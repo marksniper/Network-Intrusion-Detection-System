@@ -83,12 +83,16 @@ It is sufficient to click \"Run\" in the Rstudio. Otherwise, it is possible run 
 
 ### Other infromation
 
-The prpject is divided in four directory:
+The project is divided in four directory:
 
   - \"adjusting dataset \" : the R scripts permit to prepare the datasets. In fact, it is convenient to add the names of the columns and to group the data of the attacks according to five classes (DoS, Probe, U2R, R2l, normal).
   - \"dataset reduction\" : permit to reduce a dataset dimensions, analyzing the correlation function between features, the importance features with Random Forest and the scaling a values, in order to get a better performance.
   - \"exploratory data analysis\" : permit to get confidence with data. Furthermore, permit to delete some outlier, if presents, using a simple plots. 
-  - \"models evaluation\" : contains five different models. It is the core of the project: after having trained a model with KDD and NSL data sets, it is possible to save the model (the created R object) that will represent the prediction block of the Network Intrusion Detection System.. 
+  - \"models evaluation\" : contains five different models. It is the core of the project: after having trained a model with KDD and NSL data sets, it is possible to save the model (the created R object) that will represent the prediction block of the Network Intrusion Detection System.
+  - \"python evaluation\": collects four Python model (SVM, Random Forest, XGBoost and Keras).
+  
+### Add Python scripts
+The cleaning KDD and NSL-KDD were trained also in Python. You can find the Python script in \"python evaluation folder\".
 
 ## Authors
 
