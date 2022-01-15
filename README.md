@@ -1,5 +1,8 @@
 # Anomaly-based Network Intrusion Detection System with R
 
+<a href="https://zenodo.org/badge/latestdoi/158957194"><img src="https://zenodo.org/badge/158957194.svg" alt="DOI"></a>
+
+
 Anomaly based Network Intrusion Detection System is software application that monitors a network. It is composed by some parts, as shown in figure:
 
 
@@ -102,3 +105,32 @@ The cleaning KDD and NSL-KDD were trained also in Python. You can find the Pytho
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### Citation
+
+If you use this software, please cite it as below
+- R version [Training guidance with KDD cup 1999 and NSL-KDD data sets of ANIDINR: Anomaly-based network intrusion detection system](https://www.sciencedirect.com/science/article/pii/S1877050920317804) 
+```
+@article{serinelli2020training,
+  title={Training guidance with KDD cup 1999 and NSL-KDD data sets of ANIDINR: Anomaly-based network intrusion detection system},
+  author={Serinelli, Benedetto Marco and Collen, Anastasija and Nijdam, Niels Alexander},
+  journal={Procedia Computer Science},
+  volume={175},
+  pages={560--565},
+  year={2020},
+  publisher={Elsevier}
+}
+```
+- Python version [On the analysis of open source datasets: validating IDS implementation for well-known and zero day attack detection](https://www.sciencedirect.com/science/article/pii/S1877050921014198) 
+```
+@article{serinelli2021analysis,
+  title={On the analysis of open source datasets: validating IDS implementation for well-known and zero day attack detection},
+  author={Serinelli, Benedetto Marco and Collen, Anastasija and Nijdam, Niels Alexander},
+  journal={Procedia Computer Science},
+  volume={191},
+  pages={192--199},
+  year={2021},
+  publisher={Elsevier}
+}
+```
+
