@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Serinelli"
+  given-names: "Benedetto Marco"
+title: "Training guidance with KDD cup 1999 and NSL-KDD data sets of ANIDINR: Anomaly-based network intrusion detection system"
+version: 1.0.0
+doi: 10.1016/j.procs.2020.07.080
+date-released: 2020-08-06
+url: "https://www.sciencedirect.com/science/article/pii/S1877050920317804"
